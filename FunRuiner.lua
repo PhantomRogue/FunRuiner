@@ -1,4 +1,5 @@
 local function DebugMsg(msg) print(msg) end
+FR_Enabled = true
 local FR_DelayQueue = {}
 local FR_UpdateFrame = CreateFrame("Frame")
 
@@ -33,6 +34,7 @@ end
 
 -- check message against a given bank
 local function checkBank(bankName, prefix, msgLower, channel, sender)
+	if not FR_Enabled then return false end
     local qArr = _G[bankName]
     if type(qArr) ~= "table" then return false end
 
@@ -70,6 +72,17 @@ local function recentlyAnswered(key)
     if lastAnswered[key] and (now - lastAnswered[key]) < 2.0 then return true end
     lastAnswered[key] = now
     return false
+end
+
+-- ===== slash command =====
+SLASH_FUNRUINER1 = "/funruiner"
+SlashCmdList["FUNRUINER"] = function()
+    FR_Enabled = not FR_Enabled
+    if FR_Enabled then
+        print("FunRuiner is now ENABLED.")
+    else
+        print("FunRuiner is now DISABLED.")
+    end
 end
 
 -- events

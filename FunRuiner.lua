@@ -53,8 +53,7 @@ function endsWith(str, ending)
 end
 
 -- check message against a given bank
-local function checkBank(bankName, prefix, msgLower, channel, sender)
-	if not FR_Enabled then return false end
+local function checkBank(bankName, prefix, msgLower, channel, sender)	
     local qArr = _G[bankName]
     if type(qArr) ~= "table" then return false end
 
@@ -122,7 +121,7 @@ f:SetScript("OnEvent", function()
     end
   end 
   
-  if event == "CHAT_MSG_SAY" or event == "CHAT_MSG_WHISPER" then
+  if event == "CHAT_MSG_SAY" or event == "CHAT_MSG_WHISPER" and FR_Enabled then
     local msg, sender = arg1, arg2  -- use globals in 1.12
     if type(msg) ~= "string" or msg == "" then return end
 
@@ -135,7 +134,7 @@ f:SetScript("OnEvent", function()
     local channel = (event == "CHAT_MSG_SAY") and "SAY" or "WHISPER"
 
     -- Debug line to prove the branch fires:
-    print("FunRuiner checking:", event, "msg:", msg)
+    --print("FunRuiner checking:", event, "msg:", msg)
 
     if checkBank("WOW_TRIVIA_QUESTIONS", "WOW_TRIVIA_", msgLower, channel, sender) then return end
     if checkBank("TURTLE_TRIVIA_QUESTIONS", "TURTLE_TRIVIA_", msgLower, channel, sender) then return end

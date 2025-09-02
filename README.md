@@ -1,0 +1,2 @@
+/funruiner
+toggles on/off

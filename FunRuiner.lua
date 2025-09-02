@@ -32,6 +32,19 @@ local function getAnswer(prefix, idx)
     return nil
 end
 
+local function normalize(s)
+    if type(s) ~= "string" then return "" end
+    s = string.lower(s)
+    -- replace anything not a-z, 0-9, or space with space
+    s = string.gsub(s, "[^%w%s]", " ")
+    -- collapse multiple spaces
+    s = string.gsub(s, "%s+", " ")
+    -- trim edges
+    s = string.gsub(s, "^%s+", "")
+    s = string.gsub(s, "%s+$", "")
+    return s
+end
+
 -- check message against a given bank
 local function checkBank(bankName, prefix, msgLower, channel, sender)
 	if not FR_Enabled then return false end
@@ -40,8 +53,9 @@ local function checkBank(bankName, prefix, msgLower, channel, sender)
 
     for i = 1, table.getn(qArr) do
         local q = qArr[i]
-        if type(q) == "string" and string.find(msgLower, string.lower(q, 1, true)) then
+        if type(q) == "string" and string.find(normalize(q), normalize(msgLower), 1, true) then
             local ans = getAnswer(prefix, i)
+			print("q" .. normalize(q) .. "ans" .. ans);
             if ans then
                 if channel == "SAY" then
                     DelayedSendChatMessage(ans, "SAY")
@@ -114,7 +128,7 @@ f:SetScript("OnEvent", function()
     local channel = (event == "CHAT_MSG_SAY") and "SAY" or "WHISPER"
 
     -- Debug line to prove the branch fires:
-    --print("FunRuiner checking:", event, "msg:", msg)
+    print("FunRuiner checking:", event, "msg:", msg)
 
     if checkBank("WOW_TRIVIA_QUESTIONS", "WOW_TRIVIA_", msgLower, channel, sender) then return end
     if checkBank("TURTLE_TRIVIA_QUESTIONS", "TURTLE_TRIVIA_", msgLower, channel, sender) then return end

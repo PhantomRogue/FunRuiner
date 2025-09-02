@@ -45,6 +45,13 @@ local function normalize(s)
     return s
 end
 
+function endsWith(str, ending)
+    if type(str) ~= "string" or type(ending) ~= "string" then return false end
+    if ending == "" then return true end
+    if string.len(str) < string.len(ending) then return false end
+    return string.sub(str, -string.len(ending)) == ending
+end
+
 -- check message against a given bank
 local function checkBank(bankName, prefix, msgLower, channel, sender)
 	if not FR_Enabled then return false end
@@ -53,9 +60,9 @@ local function checkBank(bankName, prefix, msgLower, channel, sender)
 
     for i = 1, table.getn(qArr) do
         local q = qArr[i]
-        if type(q) == "string" and string.find(normalize(q), normalize(msgLower), 1, true) then
+        if type(q) == "string" and endsWith(normalize(q), normalize(msgLower)) then
             local ans = getAnswer(prefix, i)
-			print("q" .. normalize(q) .. "ans" .. ans);
+			print("qNorm Found" .. normalize(q) .. "Chat " .. msgLower);
             if ans then
                 if channel == "SAY" then
                     DelayedSendChatMessage(ans, "SAY")

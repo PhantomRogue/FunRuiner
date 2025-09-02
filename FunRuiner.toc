@@ -1,0 +1,14 @@
+## Interface: 11200
+## Title: FunRuiner
+## Notes: Answers trivia questions in /say from bundled data files
+## Author: You
+## Version: 1.0
+
+# Load data files first
+WowQuestions.lua
+TurtleQuestions.lua
+GeographyQuestions.lua
+NormalQuestions.lua
+
+# Then the logic
+FunRuiner.lua

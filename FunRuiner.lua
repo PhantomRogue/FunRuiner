@@ -40,7 +40,7 @@ local function checkBank(bankName, prefix, msgLower, channel, sender)
 
     for i = 1, table.getn(qArr) do
         local q = qArr[i]
-        if type(q) == "string" and string.lower(q) == msgLower then
+        if type(q) == "string" and string.find(msgLower, string.lower(q, 1, true)) then
             local ans = getAnswer(prefix, i)
             if ans then
                 if channel == "SAY" then

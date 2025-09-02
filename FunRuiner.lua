@@ -61,7 +61,7 @@ local function checkBank(bankName, prefix, msgLower, channel, sender)
         local q = qArr[i]
         if type(q) == "string" and endsWith(normalize(q), normalize(msgLower)) then
             local ans = getAnswer(prefix, i)
-			print("qNorm Found" .. normalize(q) .. "Chat " .. msgLower);
+			print("qNorm Found " .. normalize(q) .. "Chat " .. msgLower);
             if ans then
                 if channel == "SAY" then
                     DelayedSendChatMessage(ans, "SAY")
@@ -92,6 +92,19 @@ local function recentlyAnswered(key)
     if lastAnswered[key] and (now - lastAnswered[key]) < 2.0 then return true end
     lastAnswered[key] = now
     return false
+end
+
+-- Count "words" (letters/digits) in a string; ignores punctuation
+local function WordCount(s)
+    if type(s) ~= "string" then return 0 end
+    -- make punctuation whitespace so "skills? (1-60)" doesn't inflate counts
+    s = string.gsub(s, "[^%w%s]", " ")
+    -- collapse spaces
+    s = string.gsub(s, "%s+", " ")
+    -- count non-space runs
+    local n = 0
+    for _ in string.gfind(s, "%S+") do n = n + 1 end
+    return n
 end
 
 -- ===== slash command =====
@@ -132,6 +145,11 @@ f:SetScript("OnEvent", function()
 
     local msgLower = string.lower(msg)
     local channel = (event == "CHAT_MSG_SAY") and "SAY" or "WHISPER"
+	
+	-- Stop matching on single or double words.
+    if WordCount(msgLower) < 3 then
+        return
+    end
 
     -- Debug line to prove the branch fires:
     --print("FunRuiner checking:", event, "msg:", msg)
